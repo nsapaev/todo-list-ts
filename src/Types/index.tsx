@@ -2,6 +2,10 @@
 export type  TodoListPropsType = {
     title: string,
     tasks: Array<TasksType>
+    onRemoveTaskHandler: (id:number) => void
+    onFilterHandler:(filter:FilteredValueType) => void
+    filter: FilteredValueType
+    onChangeCheckedHandler: (value:boolean, id: number) => void
   }
 
 export type TasksType = {
@@ -9,3 +13,5 @@ export type TasksType = {
     title: string,
     isDone: boolean
   }
+
+export type FilteredValueType = "ALL" | "COMPLETED" | "ACTIVE"
