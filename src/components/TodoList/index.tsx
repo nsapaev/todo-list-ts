@@ -1,7 +1,6 @@
 
 import { TodoListPropsType, TasksType } from "../../Types" 
 
-
 export function TodoList ({
   title,
   tasks,

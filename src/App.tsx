@@ -1,26 +1,29 @@
 import React, { useState } from 'react';
 import { TodoList } from './components/TodoList';
 import { TasksType, FilteredValueType } from './Types';
+import "./App.css"
+import { v4 as uuid } from 'uuid';
+
 
 
 function App() {
 
   const [tasks, setTasks] = useState<Array<TasksType>>([
-    {id: 1, title:"js", isDone: true},
-    {id: 2, title:"Html", isDone: true},
-    {id: 3, title:"react", isDone: true},
-    {id: 4, title:"NextJs", isDone: false},
-    {id: 5, title:"Routing", isDone: false},
+    {id: uuid(), title:"js", isDone: true},
+    {id: uuid(), title:"Html", isDone: true},
+    {id: uuid(), title:"react", isDone: true},
+    {id: uuid(), title:"NextJs", isDone: false},
+    {id: uuid(), title:"Routing", isDone: false},
   ])
   const [filter, setFilter] = useState<FilteredValueType>("ALL")
   
 
-    const onRemuveTask = (id: number) => {
+    const onRemuveTask = (id: string) => {
       const resultTasks = tasks.filter((t:TasksType) => t.id !== id )
       setTasks(resultTasks)
     } 
 
-    const onChangeChecked = (value:boolean, id: number) => {
+    const onChangeChecked = (value:boolean, id: string) => {
       const resultTasks = tasks.map((t: TasksType) => {
         if(t.id === id){
           return { ...t, isDone: value } 
