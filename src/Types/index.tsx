@@ -1,12 +1,21 @@
  
+export type TodoListType = {
+  id: string,
+  title: string,
+  filter: FilteredValueType,
+  tasks: Array<TasksType>,
+}
+
+
 export type  TodoListPropsType = {
+    todolistId:string,
     title: string,
     tasks: Array<TasksType>
-    onRemoveTaskHandler: (id:string) => void
-    onFilterHandler:(filter:FilteredValueType) => void
+    onRemoveTaskHandler: (taskId:string, todolistId: string) => void
+    onFilterHandler:(filter:FilteredValueType, todolistId: string) => void
     filter: FilteredValueType
-    onChangeCheckedHandler: (value:boolean, id: string) => void
-    onAddTaskHandler: (task: TasksType) => void
+    onChangeCheckedHandler: (value:boolean, id: string, todolistId: string) => void
+    onAddTaskHandler: (task: TasksType, todolistId: string) => void
   }
 
 export type TasksType = {

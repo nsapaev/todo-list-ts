@@ -4,6 +4,7 @@ import { TodoListPropsType, TasksType } from "../../Types"
 import { v4 as uuid } from 'uuid';
 
 export function TodoList ({
+  todolistId,
   title,
   tasks,
   onRemoveTaskHandler,
@@ -15,17 +16,29 @@ export function TodoList ({
 
   
   const taskList = tasks.map((task: TasksType ) => {
-    return <li className={task.isDone ? "blur_active_task": ""} key={task.id}><label> <input onChange={()=>{onChangeCheckedHandler(!task.isDone, task.id)}} type="checkbox" checked={task.isDone} /> <span> {task.title} </span> </label> <button onClick={() => {onRemoveTaskHandler(task.id)}} >x</button> </li>
+    return <li 
+        className={task.isDone ? "blur_active_task": ""} 
+        key={task.id}>
+          <label> 
+            <input 
+              onChange={()=>{onChangeCheckedHandler(!task.isDone, task.id, todolistId)}}
+              type="checkbox" checked={task.isDone}
+            />
+              <span> {task.title} </span> 
+          </label> 
+          <button onClick={() => {onRemoveTaskHandler(task.id, todolistId)}} >x</button> </li>
   })
+
     const [addTaskInputValue , setAddTaskInputValue] = useState<string>("")
 
     const [error, setError] = useState<boolean>(false)
-    const addTask = (task:TasksType) => {
+
+    const addTask = (task:TasksType, todolistId: string) => {
       if(addTaskInputValue.trim() === ""){
         setError(true)
         return
       }
-      onAddTaskHandler(task)
+      onAddTaskHandler(task,todolistId)
       setAddTaskInputValue("")
     }
 
@@ -45,19 +58,19 @@ export function TodoList ({
                 onChange={onChangeAddNewTaskInput} 
                 onKeyDown={(e) => { 
                   if(e.key === "Enter"){
-                    addTask({id: uuid(),  title: addTaskInputValue, isDone: false })
+                    addTask({id: uuid(),  title: addTaskInputValue, isDone: false },todolistId )
                   } 
                 }}/> 
-              <button onClick={() => {addTask({id: uuid(), title: addTaskInputValue,  isDone: false,}) }}>+</button>
+              <button onClick={() => {addTask({id: uuid(), title: addTaskInputValue,  isDone: false}, todolistId) }}>+</button>
               {error && <div className="error_message">Field is required </div>}
           </div>
           <ul>
             {taskList}
           </ul>
           <div>
-            <button style={{background: filter === "ALL" ? "blue" : "white" }} onClick={() => {onFilterHandler("ALL")}}>All</button>
-            <button style={{background: filter === "COMPLETED" ? "blue" : "white" }} onClick={() => {onFilterHandler("COMPLETED")}} >Completed</button>
-            <button style={{background: filter === "ACTIVE" ? "blue" : "white" }} onClick={() => {onFilterHandler("ACTIVE")}}>Active</button>
+            <button style={{background: filter === "ALL" ? "blue" : "white" }} onClick={() => {onFilterHandler("ALL",todolistId)}}>All</button>
+            <button style={{background: filter === "COMPLETED" ? "blue" : "white" }} onClick={() => {onFilterHandler("COMPLETED",todolistId)}} >Completed</button>
+            <button style={{background: filter === "ACTIVE" ? "blue" : "white" }} onClick={() => {onFilterHandler("ACTIVE",todolistId)}}>Active</button>
           </div>
   
       </div>
