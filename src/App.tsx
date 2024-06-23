@@ -38,19 +38,16 @@ function App() {
 
 
     let filteredTasks = tasks
-    useEffect(() => {
-      if(filter === "ALL"){
-        filteredTasks = tasks.filter(t => true)
-      }
-      if(filter === "ACTIVE"){
-        filteredTasks = tasks.filter(t => !t.isDone )
-      }
-      if(filter === "COMPLETED"){
-        filteredTasks = tasks.filter(t => t.isDone )
-      }
+    if(filter === "ALL"){
+      filteredTasks = tasks.filter(t => true)
+    }
+    if(filter === "ACTIVE"){
+      filteredTasks = tasks.filter(t => !t.isDone )
+    }
+    if(filter === "COMPLETED"){
+      filteredTasks = tasks.filter(t => t.isDone )
+    }  
 
-    }, [tasks])
-   
 
 
 
