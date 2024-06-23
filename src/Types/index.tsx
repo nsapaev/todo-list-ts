@@ -6,6 +6,7 @@ export type  TodoListPropsType = {
     onFilterHandler:(filter:FilteredValueType) => void
     filter: FilteredValueType
     onChangeCheckedHandler: (value:boolean, id: string) => void
+    onAddTaskHandler: (task: TasksType) => void
   }
 
 export type TasksType = {

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { TodoList } from './components/TodoList';
 import { TasksType, FilteredValueType } from './Types';
 import "./App.css"
@@ -10,13 +10,14 @@ function App() {
 
   const [tasks, setTasks] = useState<Array<TasksType>>([
     {id: uuid(), title:"js", isDone: true},
-    {id: uuid(), title:"Html", isDone: true},
-    {id: uuid(), title:"react", isDone: true},
-    {id: uuid(), title:"NextJs", isDone: false},
-    {id: uuid(), title:"Routing", isDone: false},
   ])
   const [filter, setFilter] = useState<FilteredValueType>("ALL")
   
+
+    const addTask = (task: TasksType) => {
+      const resultTasks = [task, ...tasks]
+      setTasks(resultTasks)
+    }
 
     const onRemuveTask = (id: string) => {
       const resultTasks = tasks.filter((t:TasksType) => t.id !== id )
@@ -35,16 +36,21 @@ function App() {
       setTasks(resultTasks)
     }
 
+
     let filteredTasks = tasks
-    if(filter === "ALL"){
+    useEffect(() => {
+      if(filter === "ALL"){
         filteredTasks = tasks.filter(t => true)
-    }
-    if(filter === "ACTIVE"){
-      filteredTasks = tasks.filter(t => !t.isDone )
-    }
-    if(filter === "COMPLETED"){
-      filteredTasks = tasks.filter(t => t.isDone )
-    }
+      }
+      if(filter === "ACTIVE"){
+        filteredTasks = tasks.filter(t => !t.isDone )
+      }
+      if(filter === "COMPLETED"){
+        filteredTasks = tasks.filter(t => t.isDone )
+      }
+
+    }, [tasks])
+   
 
 
 
@@ -59,7 +65,7 @@ function App() {
           onChangeCheckedHandler={onChangeChecked}
           onFilterHandler={setFilter}
           filter={filter}
-
+          onAddTaskHandler={addTask}
       />
     </div>
   );
