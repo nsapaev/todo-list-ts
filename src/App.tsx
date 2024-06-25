@@ -3,6 +3,7 @@ import { TodoList } from './components/TodoList';
 import { TasksType, FilteredValueType,TodoListType } from './Types';
 import "./App.css"
 import { v4 as uuid } from 'uuid';
+import { AddItemInput } from './components/Inputs/AddItemInput';
 
 
 
@@ -24,7 +25,6 @@ function App() {
       }
       
     }
-
     const onRemuveTask = (taskId: string, todolistId: string) => {
       const filteredTodoList = todolist.find(tl => tl.id === todolistId)
       if (filteredTodoList){
@@ -33,7 +33,6 @@ function App() {
           setTodoList([...todolist])
       }
     } 
-
     const onChangeChecked = (value:boolean, id: string, todolistId:string) => {
 
       const filterTodoList =  todolist.find(tl => tl.id === todolistId )
@@ -50,7 +49,6 @@ function App() {
       }
       
     }
-
     const onFilterHandler = (filter: FilteredValueType, todolistId: string) => {
       const filterTodoList = todolist.find(tl => tl.id === todolistId)
       if (filterTodoList) {
@@ -58,12 +56,30 @@ function App() {
         setTodoList([...todolist])
       }
     };
-   
-
+    const addTodoList = (value: string) => {
+        const newTodoList:TodoListType = {id: uuid(), tasks:[], title: value, filter: 'ALL'} 
+        setTodoList([newTodoList, ...todolist])
+    }
+    const onRemoveHandler = (id: string) => {
+        const filteredTodoLists = todolist.filter(tl => tl.id !== id)
+        setTodoList(filteredTodoLists)
+    }
+    const onChangeTaskTitleHandler = (title:string, todoListId:string, taskId: string) => {
+        const neededTodolist = todolist.find(tl => tl.id === todoListId) 
+        if(neededTodolist) {
+          const neededTask = neededTodolist.tasks.find((t => t.id === taskId))
+          if(neededTask){
+            neededTask.title = title
+          }
+          setTodoList([...todolist])
+        }
+        console.log("title",title,"todoListId",todoListId,"taskId",taskId )
+    }
 
 
   return (
     <div className="App">
+      <AddItemInput addItem={addTodoList} />
       {todolist.map((tl:TodoListType ) => {
 
           let filteredTasks = tl.tasks;
@@ -85,6 +101,8 @@ function App() {
                     onFilterHandler={onFilterHandler}
                     filter={tl.filter}
                     onAddTaskHandler={addTask}
+                    onRemoveTodoList={onRemoveHandler}
+                    onChangeTaskTitle={onChangeTaskTitleHandler}
                 />
       })}
      
@@ -93,9 +111,5 @@ function App() {
 }
 
 export default App;
-
-
-
-
 
 
