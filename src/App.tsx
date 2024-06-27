@@ -75,7 +75,13 @@ function App() {
         }
         console.log("title",title,"todoListId",todoListId,"taskId",taskId )
     }
-
+    const onChangeTodoListTitleHandler = (id:string, title: string) => {
+        const changedTodolistTitleItem = todolist.find(tl => tl.id === id)
+        if (changedTodolistTitleItem) {
+          changedTodolistTitleItem.title = title
+          setTodoList([...todolist])
+        }
+    }
 
   return (
     <div className="App">
@@ -103,6 +109,7 @@ function App() {
                     onAddTaskHandler={addTask}
                     onRemoveTodoList={onRemoveHandler}
                     onChangeTaskTitle={onChangeTaskTitleHandler}
+                    onChangeTodoListTitle={onChangeTodoListTitleHandler}
                 />
       })}
      

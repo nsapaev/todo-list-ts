@@ -1,8 +1,7 @@
 import { TodoListPropsType, TasksType } from "../../Types" 
 import { v4 as uuid } from 'uuid';
 import { AddItemInput } from "../Inputs/AddItemInput";
-import { useState } from "react";
-
+import {EditableTitle} from "../EditableTitle"
 
 export function TodoList ({
   todolistId,
@@ -14,12 +13,11 @@ export function TodoList ({
   onChangeCheckedHandler,
   onAddTaskHandler,
   onRemoveTodoList,
-  onChangeTaskTitle
+  onChangeTaskTitle,
+  onChangeTodoListTitle,
   }: TodoListPropsType ){
 
   
-  const [tLTitleEditMode, setTLTitleEditMode] = useState<boolean>(false)
-  const [tlTitle, setTLTitle] = useState<string>(title)
   
   const taskList = tasks.map((task: TasksType ) => {
     
@@ -35,32 +33,26 @@ export function TodoList ({
               onChange={()=>{onChangeCheckedHandler(!task.isDone, task.id, todolistId)}}
               type="checkbox" checked={task.isDone}
             />
-             <TaskTitle title={task.title} setNewTitle={setNewTitle} />
+             <EditableTitle title={task.title} setNewTitle={setNewTitle} />
           </label> 
           <button onClick={() => {onRemoveTaskHandler(task.id, todolistId)}} >x</button> </li>
   })
 
 
-    
     const addItem = (value: string) =>{
       onAddTaskHandler({id: uuid(), isDone: false, title: value }, todolistId)
       console.log("value",value)
     }
     
+    const  editTodoListTitl = (title: string) => {
+      onChangeTodoListTitle(todolistId, title)
+    }
 
 
     return (
       <div style={{border: "1px solid black"}}> 
           <div> 
-            {!tLTitleEditMode && <span onDoubleClick={() => setTLTitleEditMode(true)}>{tlTitle}</span> }
-            {tLTitleEditMode && <input autoFocus value={tlTitle} 
-                onBlur={() => {setTLTitleEditMode(false)}} 
-                onKeyDown={(e) => {
-                  if(e.key === "Enter"){
-                    setTLTitleEditMode(false)
-                  }
-                }} 
-                onChange={(e) => {setTLTitle(e.target.value)}} /> }
+            <b><EditableTitle title={title} setNewTitle={editTodoListTitl}/></b>
             <button onClick={() => {onRemoveTodoList(todolistId)}}>x</button> 
             
           </div>
@@ -79,35 +71,3 @@ export function TodoList ({
     )
   }
 
-
-type TaskTitlePropsType = {
-  title: string;
-  setNewTitle:(title: string) => void
-}
- 
-function TaskTitle({title, setNewTitle}: TaskTitlePropsType ){
-
-  const [taskTitleEditMode, setTaskTitleEditMode] = useState<boolean>(false)
-  const [value, setValue] = useState<string>(title)
-  
-  return (
-    <>
-      {!taskTitleEditMode && <span onDoubleClick={() => {setTaskTitleEditMode(true)}} > {value} </span>}
-      {taskTitleEditMode && <input autoFocus value={value} 
-                onBlur={() => {
-                  setTaskTitleEditMode(false)
-                  setNewTitle(value)
-                }} 
-                onKeyDown={(e) => {
-                  if(e.key === "Enter"){
-                    setNewTitle(value)
-                    setTaskTitleEditMode(false)
-                  }
-                }} 
-                onChange={(e) => {setValue(e.target.value)}} /> 
-      }
-    </>
-  )
-
-}
-  

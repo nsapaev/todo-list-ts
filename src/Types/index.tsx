@@ -17,7 +17,8 @@ export type  TodoListPropsType = {
     onChangeCheckedHandler: (value:boolean, id: string, todolistId: string) => void
     onAddTaskHandler: (task: TasksType, todolistId: string) => void
     onRemoveTodoList: (todoListId: string) => void
-    onChangeTaskTitle: (title: string, todolistId: string, taskId: string) => void
+    onChangeTaskTitle: (title: string, todolistId: string, taskId: string) => void,
+    onChangeTodoListTitle:(id:string,title:string) => void
   }
 
 export type TasksType = {
