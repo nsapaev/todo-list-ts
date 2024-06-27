@@ -6,6 +6,7 @@ import Button from '@mui/material/Button';
 import IconButton from '@mui/material/IconButton';
 import Checkbox from '@mui/material/Checkbox'
 import DeleteIcon from '@mui/icons-material/Delete';
+import Box from '@mui/material/Box';
 export function TodoList ({
   todolistId,
   title,
@@ -57,7 +58,15 @@ export function TodoList ({
 
 
     return (
-      <div style={{border: "1px solid black", padding: "20px "}}> 
+      <Box
+      my={4}
+      display="block"
+      alignItems="center"
+      gap={4}
+      p={2}
+      sx={{ border: '2px solid lightgray' }
+    }
+    > 
           <div> 
             <b><EditableTitle title={title} setNewTitle={editTodoListTitl}/></b>
             <Button  variant="contained" size="small" color="error" onClick={() => {onRemoveTodoList(todolistId)}}>x</Button> 
@@ -74,7 +83,10 @@ export function TodoList ({
             <Button  variant={filter === "ACTIVE" ? "contained" : "text"} color="inherit" onClick={() => {onFilterHandler("ACTIVE",todolistId)}}>Active</Button>
           </div>
   
-      </div>
+    </Box>
+     
+          
+     
     )
   }
 
