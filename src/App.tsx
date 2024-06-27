@@ -85,7 +85,7 @@ function App() {
 
   return (
     <div className="App">
-      <AddItemInput addItem={addTodoList} />
+      <AddItemInput addItem={addTodoList} label="Add TodoList" />
       {todolist.map((tl:TodoListType ) => {
 
           let filteredTasks = tl.tasks;

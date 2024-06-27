@@ -1,5 +1,5 @@
 import React, {useState} from "react"
-
+import TextField from '@mui/material/TextField';
 
 type TaskTitlePropsType = {
     title: string;
@@ -15,7 +15,7 @@ export function EditableTitle({title, setNewTitle}: TaskTitlePropsType ){
     return (
       <>
         {!taskTitleEditMode && <span onDoubleClick={() => {setTaskTitleEditMode(true)}} > {value} </span>}
-        {taskTitleEditMode && <input style={{borderColor:error ? "red": undefined }} autoFocus value={value} 
+        {taskTitleEditMode && <TextField error={error} size="small" autoFocus value={value} 
                   onBlur={() => {
                     if(value.trim() === ""){
                         setError(true)
@@ -39,7 +39,6 @@ export function EditableTitle({title, setNewTitle}: TaskTitlePropsType ){
                     setValue(e.target.value)
                 }} />
          }
-         {error && <div style={{color: "red"}} > field is required  </div>}
       </>
     )
   

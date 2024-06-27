@@ -2,7 +2,10 @@ import { TodoListPropsType, TasksType } from "../../Types"
 import { v4 as uuid } from 'uuid';
 import { AddItemInput } from "../Inputs/AddItemInput";
 import {EditableTitle} from "../EditableTitle"
-
+import Button from '@mui/material/Button';
+import IconButton from '@mui/material/IconButton';
+import Checkbox from '@mui/material/Checkbox'
+import DeleteIcon from '@mui/icons-material/Delete';
 export function TodoList ({
   todolistId,
   title,
@@ -29,13 +32,17 @@ export function TodoList ({
         className={task.isDone ? "blur_active_task": ""} 
         key={task.id}>
           <label> 
-            <input 
+            <Checkbox
+              color="success"
               onChange={()=>{onChangeCheckedHandler(!task.isDone, task.id, todolistId)}}
-              type="checkbox" checked={task.isDone}
+              checked={task.isDone}
             />
              <EditableTitle title={task.title} setNewTitle={setNewTitle} />
           </label> 
-          <button onClick={() => {onRemoveTaskHandler(task.id, todolistId)}} >x</button> </li>
+          <IconButton onClick={() => {onRemoveTaskHandler(task.id, todolistId)}} aria-label="delete" size="large">
+            <DeleteIcon />
+          </IconButton>
+          </li>
   })
 
 
@@ -50,21 +57,21 @@ export function TodoList ({
 
 
     return (
-      <div style={{border: "1px solid black"}}> 
+      <div style={{border: "1px solid black", padding: "20px "}}> 
           <div> 
             <b><EditableTitle title={title} setNewTitle={editTodoListTitl}/></b>
-            <button onClick={() => {onRemoveTodoList(todolistId)}}>x</button> 
+            <Button  variant="contained" size="small" color="error" onClick={() => {onRemoveTodoList(todolistId)}}>x</Button> 
             
           </div>
           
-          <AddItemInput addItem={addItem}/>
+          <AddItemInput addItem={addItem} label="Add task"/>
           <ul>
             {taskList}
           </ul>
-          <div>
-            <button style={{background: filter === "ALL" ? "blue" : "white" }} onClick={() => {onFilterHandler("ALL",todolistId)}}>All</button>
-            <button style={{background: filter === "COMPLETED" ? "blue" : "white" }} onClick={() => {onFilterHandler("COMPLETED",todolistId)}} >Completed</button>
-            <button style={{background: filter === "ACTIVE" ? "blue" : "white" }} onClick={() => {onFilterHandler("ACTIVE",todolistId)}}>Active</button>
+          <div >
+            <Button variant={filter === "ALL" ? "contained" : "text"} color="inherit" onClick={() => {onFilterHandler("ALL",todolistId)}}>All</Button>
+            <Button variant={filter === "COMPLETED" ? "contained" : "text"} color="inherit"  onClick={() => {onFilterHandler("COMPLETED",todolistId)}} >Completed</Button>
+            <Button  variant={filter === "ACTIVE" ? "contained" : "text"} color="inherit" onClick={() => {onFilterHandler("ACTIVE",todolistId)}}>Active</Button>
           </div>
   
       </div>
