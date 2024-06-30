@@ -9,9 +9,6 @@ import Box from '@mui/material/Box';
 
     
 
-
-
-
 function App() {
 
 
@@ -22,6 +19,7 @@ function App() {
   ])
 
 
+    // Functions 
     const addTask = (task: TasksType, todolistId: string) => {
       const filterTodolist = todolist.find(tl => tl.id === todolistId )
       if (filterTodolist) {
@@ -29,7 +27,7 @@ function App() {
         setTodoList([...todolist])
       }
       
-    }
+    }    
     const onRemuveTask = (taskId: string, todolistId: string) => {
       const filteredTodoList = todolist.find(tl => tl.id === todolistId)
       if (filteredTodoList){
@@ -65,7 +63,7 @@ function App() {
         const newTodoList:TodoListType = {id: uuid(), tasks:[], title: value, filter: 'ALL'} 
         setTodoList([newTodoList, ...todolist])
     }
-    const onRemoveHandler = (id: string) => {
+    const onRemoveTodoListHandler = (id: string) => {
         const filteredTodoLists = todolist.filter(tl => tl.id !== id)
         setTodoList(filteredTodoLists)
     }
@@ -78,7 +76,6 @@ function App() {
           }
           setTodoList([...todolist])
         }
-        console.log("title",title,"todoListId",todoListId,"taskId",taskId )
     }
     const onChangeTodoListTitleHandler = (id:string, title: string) => {
         const changedTodolistTitleItem = todolist.find(tl => tl.id === id)
@@ -112,7 +109,7 @@ function App() {
                     onFilterHandler={onFilterHandler}
                     filter={tl.filter}
                     onAddTaskHandler={addTask}
-                    onRemoveTodoList={onRemoveHandler}
+                    onRemoveTodoList={onRemoveTodoListHandler}
                     onChangeTaskTitle={onChangeTaskTitleHandler}
                     onChangeTodoListTitle={onChangeTodoListTitleHandler}
                 />
