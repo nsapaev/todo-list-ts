@@ -1,71 +1,89 @@
-import React, { useEffect, useReducer, useState } from 'react';
+import React from 'react';
 import { TodoList } from './components/TodoList';
 import { TasksType, FilteredValueType,TodoListType } from './Types';
 import "./App.css"
-import { v4 as uuid } from 'uuid';
 import { AddItemInput } from './components/Inputs/AddItemInput';
-import Box from '@mui/material/Box';
-import { todolistReducer } from './state/todolistReducer';
-import {AppRootState} from "./state/store"
-import {
-  addTaskActionCreater,
-  removeTaskActionCreater,
-  removeTodolistActionCreater,
-  changeTaskChekedActionCreator,
-  filterTodolistTitleActionCreater,
-  addTodolistActionCreater,
-  changeTaskTitleActionCreater,
-  changeTodolistTitleActionCreater,
-  initialState
-} from "./state/todolistReducer"
+import { RootState } from "./state/store"
 import { useDispatch } from 'react-redux';
 import { useSelector } from 'react-redux';
 
+import {
+   addTodolist, 
+   addTask,
+   removeTask,
+   changeTaskChecked,
+   changeTaskTitle,
+   filterTodolistTasks,
+   removeTodolist,
+   changeTodolistTitle
+  } from './state/todolist-slice';
     
 
 function AppWiethReducer() {
 
   // hooks
   const dispatch = useDispatch()
-  const todolists = useSelector<AppRootState, Array<TodoListType>>(state => state.todolists)
+  const todolists = useSelector<RootState, Array<TodoListType>>(state => state.todolist)
   
     // Functions 
-    const addTask = (task: TasksType, todolistId: string) => {
-        const action = addTaskActionCreater(todolistId, task)
-        dispatch(action)
+    const onAddTaskHandler = (task: TasksType, todolistId: string) => {
+        const actioon = {
+          task,
+          todolistId
+        }
+        dispatch(addTask(actioon))
     }    
-    const onRemuveTask = (taskId: string, todolistId: string) => {
-      const action = removeTaskActionCreater(todolistId, taskId)
-      dispatch(action)
+    const onRemuveTaskHandler = (taskId: string, todolistId: string) => {
+      const action = {
+        todolistId,
+        taskId
+      }
+      dispatch(removeTask(action))
     } 
-    const onChangeChecked = (value:boolean, id: string, todolistId:string) => {
-        const action = changeTaskChekedActionCreator(value, todolistId,  id)
-        dispatch(action)
+    const onChangeCheckedHandler = (value:boolean, id: string, todolistId:string) => {
+        const action = {
+          isChecked: value,
+          todolistId,
+          taskId: id
+        }
+        
+        dispatch(changeTaskChecked(action))
+    }
+    const onChangeTaskTitleHandler = (title:string, todolistId:string, taskId: string) => {
+      const action = {
+        title,
+        todolistId,
+        taskId
+      }
+      dispatch(changeTaskTitle(action))
     }
     const onFilterHandler = (filter: FilteredValueType, todolistId: string) => {
-        const action = filterTodolistTitleActionCreater(todolistId ,filter)
-        dispatch(action)
+        const action = {
+          filter,
+          todolistId
+        }
+        dispatch(filterTodolistTasks(action))
     };
-    const addTodoList = (value: string) => {
-      const action =  addTodolistActionCreater(value)
-      dispatch(action )
+    const onAddTodoListHandler = (title: string) => {
+        dispatch(addTodolist({title}))
     }
-    const onRemoveTodoListHandler = (id: string) => {
-        const action = removeTodolistActionCreater(id)
-        dispatch(action)
+    const onRemoveTodoListHandler = (todolistId: string) => {
+        const action = {
+          todolistId
+        }
+        dispatch(removeTodolist(action))
     }
-    const onChangeTaskTitleHandler = (title:string, todoListId:string, taskId: string) => {
-        const action = changeTaskTitleActionCreater(title,todoListId, taskId)
-        dispatch(action)
-    }
-    const onChangeTodoListTitleHandler = (id:string, title: string) => {
-        const action = changeTodolistTitleActionCreater(id, title)
-        dispatch(action)
+    const onChangeTodoListTitleHandler = (todolistId:string, title: string) => {
+        const action = {
+          todolistId,
+          title
+        }
+        dispatch(changeTodolistTitle(action))
     }
 
   return (
     <div className="App">
-      <div><AddItemInput addItem={addTodoList} label="Add TodoList" /></div>
+      <div><AddItemInput addItem={onAddTodoListHandler} label="Add TodoList" /></div>
       {todolists.map((tl:TodoListType ) => {
 
           let filteredTasks = tl.tasks;
@@ -82,11 +100,11 @@ function AppWiethReducer() {
                     todolistId={tl.id} 
                     title={tl.title} 
                     tasks={filteredTasks}
-                    onRemoveTaskHandler={onRemuveTask}
-                    onChangeCheckedHandler={onChangeChecked}
+                    onRemoveTaskHandler={onRemuveTaskHandler}
+                    onChangeCheckedHandler={onChangeCheckedHandler}
                     onFilterHandler={onFilterHandler}
                     filter={tl.filter}
-                    onAddTaskHandler={addTask}
+                    onAddTaskHandler={onAddTaskHandler}
                     onRemoveTodoList={onRemoveTodoListHandler}
                     onChangeTaskTitle={onChangeTaskTitleHandler}
                     onChangeTodoListTitle={onChangeTodoListTitleHandler}
