@@ -11,7 +11,7 @@ import Box from '@mui/material/Box';
 
 function App() {
 
-
+  // hooks
   const [todolist, setTodoList] = useState<Array<TodoListType>>([
     {id: uuid(), title: "Glossary list", filter:"ALL", tasks: [ {id: uuid(), title:"js", isDone: true}] },
     {id: uuid(), title: "Programming", filter:"ALL", tasks: [ {id: uuid(), title:"js", isDone: true}] },

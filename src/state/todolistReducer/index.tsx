@@ -16,8 +16,9 @@ import {
 
 export type ActionSType = AddTodolistActionType | RemoveTodolistActionType | ChangeTodolistTitleActionType | FilterTodolistType | ChangeTaskTitleType | ChangeTaskCheckedType | RemoveTaskType | AddTaskType
  
+export const initialState:  Array<TodoListType> = []
 
-export const todolistReducer = (state: Array<TodoListType>, action: ActionSType):Array<TodoListType>  => {
+export const todolistReducer = (state: Array<TodoListType> = initialState, action: ActionSType):Array<TodoListType>  => {
     switch (action.type) {
         case "ADD-TODOLIST":
             const newTodoList:TodoListType = {id: uuid(), tasks:[], title: action.value, filter: 'ALL'} 
@@ -65,24 +66,26 @@ export const todolistReducer = (state: Array<TodoListType>, action: ActionSType)
             return [...copyState]
         }
         case "REMOVE-TASK": {
-            const copyState = [...state]
-            const filteredTodoList = copyState.find(tl => tl.id === action.todolistId)
+            const filteredTodoList = state.find(tl => tl.id === action.todolistId)
             if (filteredTodoList){
                 const filterTasks = filteredTodoList.tasks.filter(t => t.id !== action.taskId)
                 filteredTodoList.tasks = [...filterTasks]
             }
-            return [...copyState]
+            return [...state]
         }
-        case "ADD-TASK": {
-            const copyState = [...state]
-            const filterTodolist = copyState.find(tl => tl.id === action.todolistId )
-            if (filterTodolist) {
-                filterTodolist.tasks.unshift(action.task)
+        case "ADD-TASK": { const newState = state.map(tl => {
+            if (tl.id === action.todolistId) {
+                return {
+                    ...tl,
+                    tasks: [action.task, ...tl.tasks]
+                };
             }
-            return [...copyState]
+            return tl;
+        });
+        return newState;
         }
         default:
-            return [...state]
+            return state
     }
 }
 
