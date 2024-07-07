@@ -1,5 +1,5 @@
 
-import { useState,ChangeEvent } from "react"
+import React, { useState,ChangeEvent } from "react"
 import TextField from '@mui/material/TextField';
 import { Button } from "@mui/material";
 
@@ -8,11 +8,13 @@ type AddItemInputPropsType = {
     label: string
   }
 
-export function AddItemInput({ addItem ,label }:AddItemInputPropsType) {
+
+
+
+export const AddItemInput = React.memo( ({ addItem ,label }:AddItemInputPropsType) => {
 
     const [value , setValue] = useState<string>("")
     const [error, setError] = useState<boolean>(false)
-
     const onChange = (e:ChangeEvent<HTMLInputElement>) => {
       setError(false)
       setValue(e.target.value)
@@ -27,6 +29,7 @@ export function AddItemInput({ addItem ,label }:AddItemInputPropsType) {
         setValue("")
     }
     
+    console.log("Called AddItemInput")
 
     return (
         <div style={{display: "flex", alignItems: "center"}}>
@@ -45,7 +48,7 @@ export function AddItemInput({ addItem ,label }:AddItemInputPropsType) {
                   error={error}
                 /> 
                 <Button size="large" variant="contained"  color="primary" onClick={() => {onAddItemHandler(value)}}>+</Button>
-               
+            
         </div>
     )
-  }
+  });

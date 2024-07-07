@@ -9,8 +9,8 @@ export type TodoListType = {
 
 export type  TodoListPropsType = {
     todolistId:string,
+    todoList: TodoListType
     title: string,
-    tasks: Array<TasksType>
     onRemoveTaskHandler: (taskId:string, todolistId: string) => void
     onFilterHandler:(filter:FilteredValueType, todolistId: string) => void
     filter: FilteredValueType

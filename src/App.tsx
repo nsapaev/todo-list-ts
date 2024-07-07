@@ -1,114 +1,113 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback } from 'react';
 import { TodoList } from './components/TodoList';
 import { TasksType, FilteredValueType,TodoListType } from './Types';
 import "./App.css"
-import { v4 as uuid } from 'uuid';
 import { AddItemInput } from './components/Inputs/AddItemInput';
-import Box from '@mui/material/Box';
+import { RootState, AppDispatch} from "./state/store"
+import { useDispatch } from 'react-redux';
+import { useSelector } from 'react-redux';
 
-
+import {
+   addTodolist, 
+   addTask,
+   removeTask,
+   changeTaskChecked,
+   changeTaskTitle,
+   filterTodolistTasks,
+   removeTodolist,
+   changeTodolistTitle
+  } from './state/todolist-slice';
+import { Button } from '@mui/material';
     
+  
+
 
 function App() {
 
   // hooks
-  const [todolist, setTodoList] = useState<Array<TodoListType>>([
-    {id: uuid(), title: "Glossary list", filter:"ALL", tasks: [ {id: uuid(), title:"js", isDone: true}] },
-    {id: uuid(), title: "Programming", filter:"ALL", tasks: [ {id: uuid(), title:"js", isDone: true}] },
-
-  ])
-
-
+  const dispatch = useDispatch<AppDispatch>()
+  const todolists = useSelector<RootState, Array<TodoListType>>(state => state.todolist)
+  console.log("Called App")
+  
     // Functions 
-    const addTask = (task: TasksType, todolistId: string) => {
-      const filterTodolist = todolist.find(tl => tl.id === todolistId )
-      if (filterTodolist) {
-        filterTodolist.tasks.unshift(task)
-        setTodoList([...todolist])
-      }
-      
-    }    
-    const onRemuveTask = (taskId: string, todolistId: string) => {
-      const filteredTodoList = todolist.find(tl => tl.id === todolistId)
-      if (filteredTodoList){
-          const filterTasks = filteredTodoList.tasks.filter(t => t.id !== taskId)
-          filteredTodoList.tasks = [...filterTasks]
-          setTodoList([...todolist])
-      }
-    } 
-    const onChangeChecked = (value:boolean, id: string, todolistId:string) => {
-
-      const filterTodoList =  todolist.find(tl => tl.id === todolistId )
-      if(filterTodoList){
-        const resultTasks = filterTodoList.tasks.map((t: TasksType) => {
-          if(t.id === id){
-            return { ...t, isDone: value } 
-          }else{
-            return { ...t }
-          }}
-        );
-        filterTodoList.tasks = [...resultTasks]
-        setTodoList([...todolist])
-      }
-      
-    }
-    const onFilterHandler = (filter: FilteredValueType, todolistId: string) => {
-      const filterTodoList = todolist.find(tl => tl.id === todolistId)
-      if (filterTodoList) {
-        filterTodoList.filter = filter
-        setTodoList([...todolist])
-      }
-    };
-    const addTodoList = (value: string) => {
-        const newTodoList:TodoListType = {id: uuid(), tasks:[], title: value, filter: 'ALL'} 
-        setTodoList([newTodoList, ...todolist])
-    }
-    const onRemoveTodoListHandler = (id: string) => {
-        const filteredTodoLists = todolist.filter(tl => tl.id !== id)
-        setTodoList(filteredTodoLists)
-    }
-    const onChangeTaskTitleHandler = (title:string, todoListId:string, taskId: string) => {
-        const neededTodolist = todolist.find(tl => tl.id === todoListId) 
-        if(neededTodolist) {
-          const neededTask = neededTodolist.tasks.find((t => t.id === taskId))
-          if(neededTask){
-            neededTask.title = title
-          }
-          setTodoList([...todolist])
+    const onAddTaskHandler = useCallback((task: TasksType, todolistId: string) => {
+        const actioon = {
+          task,
+          todolistId
         }
-    }
-    const onChangeTodoListTitleHandler = (id:string, title: string) => {
-        const changedTodolistTitleItem = todolist.find(tl => tl.id === id)
-        if (changedTodolistTitleItem) {
-          changedTodolistTitleItem.title = title
-          setTodoList([...todolist])
+        dispatch(addTask(actioon))
+    }, [dispatch])   
+    const onRemuveTaskHandler = useCallback ((taskId: string, todolistId: string) => {
+      const action = {
+        todolistId,
+        taskId
+      }
+      dispatch(removeTask(action))
+    }, [dispatch])
+    const onChangeCheckedHandler = useCallback ((value:boolean, id: string, todolistId:string) => {
+        const action = {
+          isChecked: value,
+          todolistId,
+          taskId: id
         }
-    }
+        
+        dispatch(changeTaskChecked(action))
+    }, [dispatch])
+    const onChangeTaskTitleHandler = useCallback ((title:string, todolistId:string, taskId: string) => {
+      const action = {
+        title,
+        todolistId,
+        taskId
+      }
+      dispatch(changeTaskTitle(action))
+    }, [dispatch])
+    const onFilterHandler = useCallback ((filter: FilteredValueType, todolistId: string) => {
+        const action = {
+          filter,
+          todolistId
+        }
+        dispatch(filterTodolistTasks(action))
+    }, [dispatch])
+    const onAddTodoListHandler = useCallback( (title: string) => {
+        dispatch(addTodolist({title}))
+    }, [dispatch])
+    const onRemoveTodoListHandler = useCallback ((todolistId: string) => {
+        const action = {
+          todolistId
+        }
+        dispatch(removeTodolist(action))
+    }, [dispatch])
+    const onChangeTodoListTitleHandler = useCallback ( (todolistId:string, title: string) => {
+        const action = {
+          todolistId,
+          title
+        }
+        dispatch(changeTodolistTitle(action))
+    }, [dispatch])
 
   return (
     <div className="App">
-      <AddItemInput addItem={addTodoList} label="Add TodoList" />
-      {todolist.map((tl:TodoListType ) => {
+        <input type='email' autoComplete='username'/>
 
-          let filteredTasks = tl.tasks;
+        <button> focus visible</button>
+      <form action="">
 
-          if (tl.filter === 'ACTIVE') {
-            filteredTasks = tl.tasks.filter(t => !t.isDone);
-          }
-          if (tl.filter === 'COMPLETED') {
-            filteredTasks = tl.tasks.filter(t => t.isDone);
-          }
+      </form>
+      
+      <div><AddItemInput addItem={onAddTodoListHandler} label="Add TodoList" /></div>
+
+      {todolists.map((tl:TodoListType ) => {
 
         return  <TodoList
                     key={tl.id}
+                    todoList={tl}
                     todolistId={tl.id} 
                     title={tl.title} 
-                    tasks={filteredTasks}
-                    onRemoveTaskHandler={onRemuveTask}
-                    onChangeCheckedHandler={onChangeChecked}
+                    onRemoveTaskHandler={onRemuveTaskHandler}
+                    onChangeCheckedHandler={onChangeCheckedHandler}
                     onFilterHandler={onFilterHandler}
                     filter={tl.filter}
-                    onAddTaskHandler={addTask}
+                    onAddTaskHandler={onAddTaskHandler}
                     onRemoveTodoList={onRemoveTodoListHandler}
                     onChangeTaskTitle={onChangeTaskTitleHandler}
                     onChangeTodoListTitle={onChangeTodoListTitleHandler}

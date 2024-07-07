@@ -1,16 +1,18 @@
+import React, { useCallback, useRef } from "react";
 import { TodoListPropsType, TasksType } from "../../Types" 
 import { v4 as uuid } from 'uuid';
 import { AddItemInput } from "../Inputs/AddItemInput";
-import {EditableTitle} from "../EditableTitle"
+import EditableTitle from "../EditableTitle"
 import Button from '@mui/material/Button';
 import IconButton from '@mui/material/IconButton';
 import Checkbox from '@mui/material/Checkbox'
 import DeleteIcon from '@mui/icons-material/Delete';
 import Box from '@mui/material/Box';
-export function TodoList ({
+
+export const TodoList = React.memo (function({
   todolistId,
+  todoList,
   title,
-  tasks,
   onRemoveTaskHandler,
   onFilterHandler,
   filter,
@@ -20,16 +22,25 @@ export function TodoList ({
   onChangeTaskTitle,
   onChangeTodoListTitle,
   }: TodoListPropsType ){
+  
+    // fiter tasks
+    let filteredTasks = todoList.tasks;
 
-  
-  
-  const taskList = tasks.map((task: TasksType ) => {
+    if (todoList.filter === 'ACTIVE') {
+      filteredTasks = todoList.tasks.filter(t => !t.isDone);
+    }
+    if (todoList.filter === 'COMPLETED') {
+      filteredTasks = todoList.tasks.filter(t => t.isDone);
+    } 
+
+
+    const taskList = filteredTasks.map((task: TasksType ) => {
     
-     const setNewTitle = (title:string) => {
+      const setNewTitle = (title:string) => {
         onChangeTaskTitle(title,todolistId, task.id)
-     }
+      }
 
-    return <li 
+      return <li 
         className={task.isDone ? "blur_active_task": ""} 
         key={task.id}>
           <label> 
@@ -47,16 +58,17 @@ export function TodoList ({
   })
 
 
-    const addItem = (value: string) =>{
+    const addItem = useCallback( (value: string) =>{
       onAddTaskHandler({id: uuid(), isDone: false, title: value }, todolistId)
-      console.log("value",value)
-    }
+    }, [])
     
-    const  editTodoListTitl = (title: string) => {
+    const  editTodoListTitl = useCallback ( (title: string) => {
       onChangeTodoListTitle(todolistId, title)
-    }
+    }, [])
 
-
+    
+    
+    console.log("Called Todolist")
     return (
       <Box
       my={4}
@@ -70,7 +82,7 @@ export function TodoList ({
           <div> 
             <b><EditableTitle title={title} setNewTitle={editTodoListTitl}/></b>
             <Button  variant="contained" size="small" color="error" onClick={() => {onRemoveTodoList(todolistId)}}>x</Button> 
-            
+              
           </div>
           
           <AddItemInput addItem={addItem} label="Add task"/>
@@ -88,5 +100,5 @@ export function TodoList ({
           
      
     )
-  }
+  })
 

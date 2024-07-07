@@ -17,3 +17,9 @@ li{
 .blur_active_task{
     opacity: 0.5;
 }
+
+
+button:focus-visible, a:focus-visible, input:focus-visible {
+       outline: 5px solid oklch(60% 0.15 252);
+
+}

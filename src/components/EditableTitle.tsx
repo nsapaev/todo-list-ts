@@ -6,12 +6,14 @@ type TaskTitlePropsType = {
     setNewTitle:(title: string) => void
   }
    
-export function EditableTitle({title, setNewTitle}: TaskTitlePropsType ){
+const EditableTitle = React.memo (function({title, setNewTitle}: TaskTitlePropsType ){
   
     const [taskTitleEditMode, setTaskTitleEditMode] = useState<boolean>(false)
     const [value, setValue] = useState<string>(title)
     const [error,setError] = useState<boolean>(false)
     
+
+    console.log("Called EditableTitle")
     return (
       <>
         {!taskTitleEditMode && <span onDoubleClick={() => {setTaskTitleEditMode(true)}} > {value} </span>}
@@ -42,5 +44,7 @@ export function EditableTitle({title, setNewTitle}: TaskTitlePropsType ){
       </>
     )
   
-  }
+  })
+  
+  export default EditableTitle
     
