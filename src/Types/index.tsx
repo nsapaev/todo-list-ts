@@ -26,5 +26,11 @@ export type TasksType = {
     title: string,
     isDone: boolean
   }
-
+ 
 export type FilteredValueType = "ALL" | "COMPLETED" | "ACTIVE"
+
+export type UserAuthType = {
+  email: null | string ;
+  token: null | string;
+  id: null | string;
+}
